@@ -1,6 +1,6 @@
 import "./App.css";
 import io from "socket.io-client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Chat from "./components/Chat";
 
 const socket = io.connect("http://localhost:4000");
@@ -11,10 +11,11 @@ function App() {
 	const [showChat, setShowChat] = useState(false);
 	const joinRoom = () => {
 		if (username !== "" && room !== "") {
-			socket.emit("join_room", room);
+			socket.emit("join_room", { room, username });
 			setShowChat(true);
 		}
 	};
+
 	return (
 		<div className="flex flex-col w-screen h-screen items-center justify-center">
 			{showChat === true ? (
@@ -24,7 +25,10 @@ function App() {
 					room={room}
 				/>
 			) : (
-				<div className="flex flex-col bg-red-100 h-1/2 w-1/4 items-center rounded-2xl">
+				<div
+					className="flex flex-col bg-red-100 h-1/2 items-center rounded-2xl"
+					style={{ width: "400px" }}
+				>
 					<h1 className="text-2xl font-bold mt-10">QuickChat</h1>
 					<div className="flex flex-col mt-20 gap-5 w-full items-center">
 						<input
